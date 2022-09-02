@@ -119,7 +119,7 @@ class AggregateQuerySnapshot<T extends AggregateSpec> {
   readonly metadata: SnapshotMetadata;
 
   // The underlying query over which the aggregations were performed.
-  readonly query: Query<DocumentData>;
+  readonly query: Query<unknown>;
 
   // ignore this for API design purposes; it's here only to facilitate the
   // return type of data().
@@ -145,7 +145,7 @@ class AggregateQuerySnapshot<T extends AggregateSpec> {
 //
 // This is a convenience shorthand for:
 //   getAggregate(query, { count: count() }).
-function getCount(query: Query):
+function getCount(query: Query<unknown>):
     Promise<AggregateQuerySnapshot<{ count: CountAggregateField }>> {
   return getAggregate(query, { count: count() });
 }
@@ -157,7 +157,7 @@ function getCount(query: Query):
 //
 // This is a convenience shorthand for:
 //   getAggregateFromServer(query, { count: count() })
-function getCountFromServer(query: Query):
+function getCountFromServer(query: Query<unknown>):
     Promise<AggregateQuerySnapshot<{ count: CountAggregateField }>> {
   return getAggregateFromServer(query, { count: count() });
 }
@@ -168,7 +168,7 @@ function getCountFromServer(query: Query):
 //
 // This is a convenience shorthand for:
 //   getAggregateFromCache(query, { count: count() })
-function getCountFromCache(query: Query):
+function getCountFromCache(query: Query<unknown>):
     Promise<AggregateQuerySnapshot<{ count: CountAggregateField }>> {
   throw new Error("not implemented");
 }
@@ -190,18 +190,21 @@ function getCountFromCache(query: Query):
 // const min_age = snapshot.data().min_age ?? 0;
 // console.log(`Found ${num_people} people, ` +
 //   `the youngest being ${min_age} years old`);
-function getAggregate<T extends AggregateSpec>(query: Query, aggregates: T):
-    Promise<AggregateQuerySnapshot<T>> {
+function getAggregate<T extends AggregateSpec>(
+    query: Query<unknown>,
+    aggregates: T): Promise<AggregateQuerySnapshot<T>> {
   throw new Error("not implemented");
 }
 
-function getAggregateFromServer<T extends AggregateSpec>(query: Query, aggregates: T):
-    Promise<AggregateQuerySnapshot<T>> {
+function getAggregateFromServer<T extends AggregateSpec>(
+    query: Query<unknown>,
+    aggregates: T): Promise<AggregateQuerySnapshot<T>> {
   throw new Error("not implemented");
 }
 
-function getAggregateFromCache<T extends AggregateSpec>(query: Query, aggregates: T):
-    Promise<AggregateQuerySnapshot<T>> {
+function getAggregateFromCache<T extends AggregateSpec>(
+    query: Query<unknown>,
+    aggregates: T): Promise<AggregateQuerySnapshot<T>> {
   throw new Error("not implemented");
 }
 
@@ -219,12 +222,12 @@ export function aggregateSnapshotEqual<T extends AggregateSpec>(
 // Sample code
 ////////////////////////////////////////////////////////////////////////////////
 
-async function countDemo(query: Query) {
+async function countDemo(query: Query<unknown>) {
   const snapshot = await getCountFromServer(query);
   console.log(`Found ${snapshot.data().count} documents`);
 }
 
-async function aggregateDemo(query: Query) {
+async function aggregateDemo(query: Query<unknown>) {
   const snapshot = await getAggregate(query, {
     num_people: count(),
     min_age: min("age"),
