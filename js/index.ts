@@ -1,5 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Types defined already in the Firestore SDK
+// Types defined already in the Firestore SDK.
+// They are copied here so that the code that follows will compile.
 ////////////////////////////////////////////////////////////////////////////////
 
 // DocumentFieldValue doesn't actually exist today; however, discussing this API
