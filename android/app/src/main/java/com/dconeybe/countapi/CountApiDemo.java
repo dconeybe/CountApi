@@ -18,11 +18,11 @@ public final class CountApiDemo {
     AggregateQuery aggregateQuery = query.aggregate(count(), min("age"), sum("salary"));
     AggregateQuerySnapshot snapshot = aggregateQuery.get().getResult();
     Object minAge = snapshot.get(min("age")).valueOr("unknown");
-    Double totalSalary = snapshot.get(sum("salary"));
+    double totalSalary = snapshot.get(sum("salary")).doubleValue(Double.NaN);
     System.out.println(
         "Found " + snapshot.getCount() + " people,"
         + " the youngest being " + minAge
-        + " earning a total of $" + (totalSalary == null ? "unknown" : totalSalary.toString())
+        + " earning a total of $" + totalSalary
     );
   }
 

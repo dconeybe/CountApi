@@ -102,74 +102,86 @@ enum AggregateSource {
   CACHE,
 }
 
-class AggregateFieldValue {
+class AggregationResult {
 
-  // Returns whether or not the aggregation was able to be calculated.
-  // If false, then all getXXX() methods will return null.
-  // Using this method helps to differentiate between the actual result of the aggregation being
-  // null, or the aggregation not being able to be performed because no documents in the result set
-  // defined a value for the field being aggregated.
-  boolean isDefined() {
-    throw new RuntimeException("not implemented");
-  }
-
-  @Nullable
-  Object valueOr(@Nullable Object returnValueIfUndefined) {
-    return valueOr(Object.class, returnValueIfUndefined);
-  }
-
-  @Nullable
-  <T> T valueOr(Class<T> valueType, @Nullable T returnValueIfUndefined) {
-    return isDefined() ? value(valueType) : returnValueIfUndefined;
-  }
+  static final UndefinedValue UNDEFINED = new UndefinedValue();
+  static final OutOfRangeValue OUT_OF_RANGE = new OutOfRangeValue();
 
   @Nullable
   Object value() {
-    return value(Object.class);
-  }
-
-  @Nullable
-  <T> T value(Class<T> valueType) {
+    // Return either the value, or UNDEFINED or OUT_OF_RANGE.
     throw new RuntimeException("not implemented");
   }
 
-  @Nullable
-  Blob blobValue() {
-    throw new RuntimeException("not implemented");
+  @NonNull
+  Object valueOr(@NonNull Object defaultValue) {
+    Object value = value();
+    return (value != UNDEFINED && value != OUT_OF_RANGE && value != null) ? value : defaultValue;
   }
 
   @Nullable
-  Boolean booleanValue() {
-    throw new RuntimeException("not implemented");
+  <T> T valueAs(@NonNull Class<T> valueType) {
+    Object value = value();
+    return valueType.isInstance(value) ? valueType.cast(value) : null;
+  }
+
+  @NonNull
+  <T> T valueAs(@NonNull Class<T> valueType, @NonNull T defaultValue) {
+    T value = valueAs(valueType);
+    return (value != null) ? value : defaultValue;
   }
 
   @Nullable
   Date dateValue() {
-    throw new RuntimeException("not implemented");
+    return valueAs(Date.class);
+  }
+
+  @NonNull
+  Date dateValue(@NonNull Date defaultValue) {
+    return valueAs(Date.class, defaultValue);
   }
 
   @Nullable
   Double doubleValue() {
-    throw new RuntimeException("not implemented");
+    return valueAs(Double.class);
   }
 
-  @Nullable
-  GeoPoint geoPointValue() {
-    throw new RuntimeException("not implemented");
+  double doubleValue(double defaultValue) {
+    return valueAs(Double.class, defaultValue);
   }
 
   @Nullable
   Long longValue() {
-    throw new RuntimeException("not implemented");
+    return valueAs(Long.class);
+  }
+
+  long longValue(long defaultValue) {
+    return valueAs(Long.class, defaultValue);
   }
 
   @Nullable
-  DocumentReference referenceValue() {
-    throw new RuntimeException("not implemented");
+  String stringValue() {
+    return valueAs(String.class);
+  }
+
+  @NonNull
+  String stringValue(String defaultValue) {
+    return valueAs(String.class, defaultValue);
   }
 
   @Nullable
   Timestamp timestampValue() {
+    return valueAs(Timestamp.class);
+  }
+
+  @NonNull
+  Timestamp timestampValue(Timestamp defaultValue) {
+    return valueAs(Timestamp.class, defaultValue);
+  }
+
+  @NonNull
+  @Override
+  public String toString() {
     throw new RuntimeException("not implemented");
   }
 
@@ -181,6 +193,12 @@ class AggregateFieldValue {
   @Override
   public int hashCode() {
     throw new RuntimeException("not implemented");
+  }
+
+  static final class UndefinedValue {
+  }
+
+  static final class OutOfRangeValue {
   }
 
 }
@@ -222,42 +240,29 @@ class AggregateQuerySnapshot {
   }
 
   @NonNull
-  public Map<AggregateField, AggregateFieldValue> getAggregations() {
+  public Map<AggregateField, AggregationResult> getAggregations() {
     return getAggregations(ServerTimestampBehavior.DEFAULT);
   }
 
   @NonNull
-  public Map<AggregateField, AggregateFieldValue> getAggregations(ServerTimestampBehavior stb) {
+  public Map<AggregateField, AggregationResult> getAggregations(ServerTimestampBehavior stb) {
     throw new RuntimeException("not implemented");
   }
 
   public boolean contains(AggregateField field) {
+    return getAggregations().containsKey(field);
+  }
+
+  public AggregationResult get(AggregateField field) {
     throw new RuntimeException("not implemented");
   }
 
-  public AggregateFieldValue get(AggregateField field) {
-    throw new RuntimeException("not implemented");
-  }
-
-  public AggregateFieldValue get(AggregateField field, ServerTimestampBehavior stb) {
+  public AggregationResult get(AggregateField field, ServerTimestampBehavior stb) {
     throw new RuntimeException("not implemented");
   }
 
   long getCount() {
-    return get(AggregateField.count());
-  }
-
-  public long get(AggregateField.CountAggregateField field) {
-    //noinspection ConstantConditions
-    return get((AggregateField) field).longValue();
-  }
-
-  // A return value of `null` indicates that the sum is undefined because there are no documents in
-  // the result set of the underlying query that define a value for the key specified in the given
-  // SumAggregateField.
-  @Nullable
-  public Double get(AggregateField.SumAggregateField field) {
-    return get((AggregateField) field).doubleValue();
+    return get(AggregateField.count()).longValue();
   }
 
   @Override
