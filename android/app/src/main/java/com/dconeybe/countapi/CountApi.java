@@ -28,6 +28,7 @@ enum ServerTimestampBehavior {
   NONE,
   ESTIMATE,
   PREVIOUS;
+
   static final ServerTimestampBehavior DEFAULT = ServerTimestampBehavior.NONE;
 }
 
@@ -102,107 +103,6 @@ enum AggregateSource {
   CACHE,
 }
 
-class AggregationResult {
-
-  static final UndefinedValue UNDEFINED = new UndefinedValue();
-  static final OutOfRangeValue OUT_OF_RANGE = new OutOfRangeValue();
-
-  @Nullable
-  Object value() {
-    // Return either the value, or UNDEFINED or OUT_OF_RANGE.
-    throw new RuntimeException("not implemented");
-  }
-
-  @NonNull
-  Object valueOr(@NonNull Object defaultValue) {
-    Object value = value();
-    return (value != UNDEFINED && value != OUT_OF_RANGE && value != null) ? value : defaultValue;
-  }
-
-  @Nullable
-  <T> T valueAs(@NonNull Class<T> valueType) {
-    Object value = value();
-    return valueType.isInstance(value) ? valueType.cast(value) : null;
-  }
-
-  @NonNull
-  <T> T valueAs(@NonNull Class<T> valueType, @NonNull T defaultValue) {
-    T value = valueAs(valueType);
-    return (value != null) ? value : defaultValue;
-  }
-
-  @Nullable
-  Date dateValue() {
-    return valueAs(Date.class);
-  }
-
-  @NonNull
-  Date dateValue(@NonNull Date defaultValue) {
-    return valueAs(Date.class, defaultValue);
-  }
-
-  @Nullable
-  Double doubleValue() {
-    return valueAs(Double.class);
-  }
-
-  double doubleValue(double defaultValue) {
-    return valueAs(Double.class, defaultValue);
-  }
-
-  @Nullable
-  Long longValue() {
-    return valueAs(Long.class);
-  }
-
-  long longValue(long defaultValue) {
-    return valueAs(Long.class, defaultValue);
-  }
-
-  @Nullable
-  String stringValue() {
-    return valueAs(String.class);
-  }
-
-  @NonNull
-  String stringValue(String defaultValue) {
-    return valueAs(String.class, defaultValue);
-  }
-
-  @Nullable
-  Timestamp timestampValue() {
-    return valueAs(Timestamp.class);
-  }
-
-  @NonNull
-  Timestamp timestampValue(Timestamp defaultValue) {
-    return valueAs(Timestamp.class, defaultValue);
-  }
-
-  @NonNull
-  @Override
-  public String toString() {
-    throw new RuntimeException("not implemented");
-  }
-
-  @Override
-  public boolean equals(@Nullable Object obj) {
-    throw new RuntimeException("not implemented");
-  }
-
-  @Override
-  public int hashCode() {
-    throw new RuntimeException("not implemented");
-  }
-
-  static final class UndefinedValue {
-  }
-
-  static final class OutOfRangeValue {
-  }
-
-}
-
 class AggregateQuery {
 
   Query getQuery() {
@@ -240,29 +140,107 @@ class AggregateQuerySnapshot {
   }
 
   @NonNull
-  public Map<AggregateField, AggregationResult> getAggregations() {
+  public Map<AggregateField, Object> getAggregations() {
     return getAggregations(ServerTimestampBehavior.DEFAULT);
   }
 
   @NonNull
-  public Map<AggregateField, AggregationResult> getAggregations(ServerTimestampBehavior stb) {
+  public Map<AggregateField, Object> getAggregations(ServerTimestampBehavior stb) {
     throw new RuntimeException("not implemented");
   }
 
-  public boolean contains(AggregateField field) {
+  public boolean contains(@NonNull AggregateField field) {
     return getAggregations().containsKey(field);
   }
 
-  public AggregationResult get(AggregateField field) {
-    throw new RuntimeException("not implemented");
-  }
-
-  public AggregationResult get(AggregateField field, ServerTimestampBehavior stb) {
-    throw new RuntimeException("not implemented");
-  }
-
   long getCount() {
-    return get(AggregateField.count()).longValue();
+    return getLong(AggregateField.count());
+  }
+
+  boolean isUndefined(@NonNull AggregateField aggregateField) {
+    throw new RuntimeException("not implemented");
+  }
+
+  boolean isOutOfRange(@NonNull AggregateField aggregateField) {
+    throw new RuntimeException("not implemented");
+  }
+
+  @Nullable
+  Object get(@NonNull AggregateField aggregateField) {
+    // Return either the value, or UNDEFINED or OUT_OF_RANGE.
+    throw new RuntimeException("not implemented");
+  }
+
+  @NonNull
+  Object getOr(@NonNull AggregateField aggregateField, @NonNull Object defaultValue) {
+    Object value = get(aggregateField);
+    return (value != UNDEFINED && value != OUT_OF_RANGE && value != null) ? value : defaultValue;
+  }
+
+  @Nullable
+  <T> T get(@NonNull AggregateField aggregateField, @NonNull Class<T> valueType) {
+    Object value = get(aggregateField);
+    return valueType.isInstance(value) ? valueType.cast(value) : null;
+  }
+
+  @NonNull
+  <T> T get(@NonNull AggregateField aggregateField, @NonNull Class<T> valueType, @NonNull T defaultValue) {
+    T value = get(aggregateField, valueType);
+    return (value != null) ? value : defaultValue;
+  }
+
+  @Nullable
+  Date getDate(@NonNull AggregateField aggregateField) {
+    return get(aggregateField, Date.class);
+  }
+
+  @NonNull
+  Date getDate(@NonNull AggregateField aggregateField, @NonNull Date defaultValue) {
+    return get(aggregateField, Date.class, defaultValue);
+  }
+
+  @Nullable
+  Double getDouble(@NonNull AggregateField aggregateField) {
+    return get(aggregateField, Double.class);
+  }
+
+  double getDouble(@NonNull AggregateField aggregateField, double defaultValue) {
+    return get(aggregateField, Double.class, defaultValue);
+  }
+
+  @Nullable
+  Long getLong(@NonNull AggregateField aggregateField) {
+    return get(aggregateField, Long.class);
+  }
+
+  long getLong(@NonNull AggregateField aggregateField, long defaultValue) {
+    return get(aggregateField, Long.class, defaultValue);
+  }
+
+  @Nullable
+  String getString(@NonNull AggregateField aggregateField) {
+    return get(aggregateField, String.class);
+  }
+
+  @NonNull
+  String getString(@NonNull AggregateField aggregateField, String defaultValue) {
+    return get(aggregateField, String.class, defaultValue);
+  }
+
+  @Nullable
+  Timestamp getTimestamp(@NonNull AggregateField aggregateField) {
+    return get(aggregateField, Timestamp.class);
+  }
+
+  @NonNull
+  Timestamp getTimestamp(@NonNull AggregateField aggregateField, Timestamp defaultValue) {
+    return get(aggregateField, Timestamp.class, defaultValue);
+  }
+
+  static final class UndefinedValue {
+  }
+
+  static final class OutOfRangeValue {
   }
 
   @Override
