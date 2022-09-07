@@ -29,80 +29,67 @@ class FieldPath {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// New AggregateField types.
+// New AggregateField type and functions.
 ////////////////////////////////////////////////////////////////////////////////
 
-interface AggregateFieldBase<T> {
+class AggregateField<T> {
+  type = "AggregateField";
   // Will always be undefined; however, it is used in the fancy type mapping
   // in AggregateSpecData (below). Is there a better way to do this?
-  _datum?: T;
+  _datum?: T = undefined;
 }
 
-// An aggregate field that counts the documents in the result set.
-class CountAggregateField
-    implements AggregateFieldBase<number> {
-  type = "CountAggregateField";
-  _datum?: number = undefined;
+// Creates and returns an aggregation that counts the documents in the result
+// set.
+function count(): AggregateField<number> {
+  throw new Error("not implemented");
 }
 
-// An aggregate field that finds the minimum value of a given field in the
-// result set. If no documents in the result define the given field, then the
-// result will be `undefined`.
-class MinAggregateField
-    implements AggregateFieldBase<DocumentFieldValue | undefined> {
-  type = "MinAggregateField";
-  _datum?: DocumentFieldValue = undefined;
-}
-
-// An aggregate field that finds the sum of the *numeric* values of a given
+// Creates and returns an aggregation that finds the minimum value of a given
 // field in the result set. If no documents in the result define the given
-// field, or none of the values are numeric, then the result will be `undefined`.
-class SumAggregateField
-    implements AggregateFieldBase<number | undefined> {
-  type = "SumAggregateField";
-  _datum?: number = undefined;
-}
-
-// A union type that matches the exact set of AggregateField implementations.
-type AggregateField =
-    CountAggregateField
-  | MinAggregateField
-  | SumAggregateField;
-
-////////////////////////////////////////////////////////////////////////////////
-// New AggregateField functions.
-////////////////////////////////////////////////////////////////////////////////
-
-// Creates and returns a new `CountAggregateField` object.
-function count(): CountAggregateField {
+// field, then the result will be `undefined`. The "minimum" will be calculated
+// as if the query results were ordered by the specified field and choosing the
+// value from the first document in the result set.
+function min(field: string | FieldPath):
+    AggregateField<DocumentFieldValue | undefined> {
   throw new Error("not implemented");
 }
 
-// Creates and returns a new `MinAggregateField` object for the given field.
-function min(field: string | FieldPath): MinAggregateField {
-  throw new Error("not implemented");
-}
-
-// Creates and returns a new `SumAggregateField` object for the given field.
-function sum(field: string | FieldPath): SumAggregateField {
+// Creates and returns an aggregation that finds the sum of the numeric values
+// of a given field in the result set. If no documents in the result set define
+// the given field, or none of the field values are numeric, then the result
+// will be `undefined`.
+function sum(field: string | FieldPath):
+    AggregateField<number | undefined> {
   throw new Error("not implemented");
 }
 
 // Compares two `AggregateField` instances for equality.
-// They are considered "equal" if and only if they are the same type and, for
-// those types that specify a field, both specify the exact same field.
-function aggregateFieldEqual(left: AggregateField, right: AggregateField): boolean {
-  return false;
+// The two `AggregateField` instances are considered "equal" if and only if
+// they were created by the same factory function (e.g. `count()`, `min()`, and
+// `sum()`) with "equal" arguments.
+function aggregateFieldEqual(
+    left: AggregateField<unknown>,
+    right: AggregateField<unknown>
+): boolean {
+  throw new Error("not implemented");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // New aggregate query and snapshot types.
 ////////////////////////////////////////////////////////////////////////////////
 
+// The union of all `AggregateField` types that are returned from the factory
+// functions.
+type AggregateFieldType =
+  AggregateField<number> |
+  AggregateField<DocumentFieldValue | undefined> |
+  AggregateField<number | undefined>;
+
 // A type whose values are all `AggregateField` objects.
 // This is used as an argument to the "getter" functions, and the snapshot will
 // map the same names to the corresponding values.
-type AggregateSpec = { [field: string]: AggregateField };
+type AggregateSpec = { [field: string]: AggregateFieldType };
 
 // A type whose keys are taken from an `AggregateSpec` type, and whose values
 // are the result of the aggregation performed by the corresponding
@@ -146,7 +133,7 @@ class AggregateQuerySnapshot<T extends AggregateSpec> {
 // This is a convenience shorthand for:
 //   getAggregate(query, { count: count() }).
 function getCount(query: Query<unknown>):
-    Promise<AggregateQuerySnapshot<{ count: CountAggregateField }>> {
+    Promise<AggregateQuerySnapshot<{ count: AggregateField<number> }>> {
   return getAggregate(query, { count: count() });
 }
 
@@ -158,7 +145,7 @@ function getCount(query: Query<unknown>):
 // This is a convenience shorthand for:
 //   getAggregateFromServer(query, { count: count() })
 function getCountFromServer(query: Query<unknown>):
-    Promise<AggregateQuerySnapshot<{ count: CountAggregateField }>> {
+    Promise<AggregateQuerySnapshot<{ count: AggregateField<number> }>> {
   return getAggregateFromServer(query, { count: count() });
 }
 
@@ -169,7 +156,7 @@ function getCountFromServer(query: Query<unknown>):
 // This is a convenience shorthand for:
 //   getAggregateFromCache(query, { count: count() })
 function getCountFromCache(query: Query<unknown>):
-    Promise<AggregateQuerySnapshot<{ count: CountAggregateField }>> {
+    Promise<AggregateQuerySnapshot<{ count: AggregateField<number> }>> {
   throw new Error("not implemented");
 }
 
