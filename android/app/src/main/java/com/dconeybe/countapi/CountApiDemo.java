@@ -18,12 +18,15 @@ public final class CountApiDemo {
     AggregateQuery aggregateQuery = query.aggregate(count(), min("age"), sum("salary"));
     AggregateQuerySnapshot snapshot = aggregateQuery.get().getResult();
 
-    Object minAge = snapshot.getOr(min("age"), "unknown");
-    double totalSalary = snapshot.getDouble(sum("salary"), Double.NaN);
+    Object minAge = snapshot.get(min("age"));
+    long minAgeStr = (minAge instanceof Long) ? (Long) minAge : 0;
+    Double totalSalary = snapshot.getDouble(sum("salary"));
+    double totalSalaryDbl = (totalSalary instanceof Double) ? (Double) totalSalary : Double.NaN;
+
     System.out.println(
         "Found " + snapshot.getCount() + " people,"
-        + " the youngest being " + minAge
-        + " earning a total of $" + totalSalary
+        + " the youngest being " + minAgeStr
+        + " earning a total of $" + totalSalaryDbl
     );
   }
 

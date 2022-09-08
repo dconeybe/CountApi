@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Objects;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Types defined already in the Firestore SDK.
@@ -50,11 +49,13 @@ class DocumentReference {
 
 class Query {
 
+  @NonNull
   AggregateQuery count() {
     throw new RuntimeException("not implemented");
   }
 
-  AggregateQuery aggregate(AggregateField aggregateField1, AggregateField... aggregateFields) {
+  @NonNull
+  AggregateQuery aggregate(@NonNull AggregateField aggregateField1, @NonNull AggregateField... aggregateFields) {
     throw new RuntimeException("not implemented");
   }
 
@@ -66,22 +67,27 @@ class Query {
 
 abstract class AggregateField {
 
+  @NonNull
   static CountAggregateField count() {
     throw new RuntimeException("not implemented");
   }
 
+  @NonNull
   static MinAggregateField min(String field) {
     throw new RuntimeException("not implemented");
   }
 
+  @NonNull
   static MinAggregateField min(FieldPath fieldPath) {
     throw new RuntimeException("not implemented");
   }
 
+  @NonNull
   static SumAggregateField sum(String field) {
     throw new RuntimeException("not implemented");
   }
 
+  @NonNull
   static SumAggregateField sum(FieldPath fieldPath) {
     throw new RuntimeException("not implemented");
   }
@@ -105,15 +111,18 @@ enum AggregateSource {
 
 class AggregateQuery {
 
+  @NonNull
   Query getQuery() {
     throw new RuntimeException("not implemented");
   }
 
+  @NonNull
   Task<AggregateQuerySnapshot> get() {
     return get(AggregateSource.DEFAULT);
   }
 
-  Task<AggregateQuerySnapshot> get(AggregateSource aggregateSource) {
+  @NonNull
+  Task<AggregateQuerySnapshot> get(@NonNull AggregateSource aggregateSource) {
     throw new RuntimeException("not implemented");
   }
 
@@ -131,10 +140,12 @@ class AggregateQuery {
 
 class AggregateQuerySnapshot {
 
+  @NonNull
   AggregateQuery getQuery() {
     throw new RuntimeException("not implemented");
   }
 
+  @NonNull
   SnapshotMetadata getMetadata() {
     throw new RuntimeException("not implemented");
   }
@@ -154,7 +165,7 @@ class AggregateQuerySnapshot {
   }
 
   long getCount() {
-    return getLong(AggregateField.count());
+    return get(AggregateField.count());
   }
 
   boolean isUndefined(@NonNull AggregateField aggregateField) {
@@ -171,22 +182,21 @@ class AggregateQuerySnapshot {
     throw new RuntimeException("not implemented");
   }
 
-  @NonNull
-  Object getOr(@NonNull AggregateField aggregateField, @NonNull Object defaultValue) {
-    Object value = get(aggregateField);
-    return (value != UNDEFINED && value != OUT_OF_RANGE && value != null) ? value : defaultValue;
+  // Special overload for "count" because it always evaluates to an integer, and is never undefined.
+  long get(@NonNull AggregateField.CountAggregateField countAggregateField) {
+    //noinspection ConstantConditions
+    return getLong(countAggregateField);
+  }
+
+  // Special overload for "sum" because it always evaluates to a double.
+  @Nullable
+  Double get(@NonNull AggregateField.SumAggregateField sumAggregateField) {
+    return getDouble(sumAggregateField);
   }
 
   @Nullable
   <T> T get(@NonNull AggregateField aggregateField, @NonNull Class<T> valueType) {
-    Object value = get(aggregateField);
-    return valueType.isInstance(value) ? valueType.cast(value) : null;
-  }
-
-  @NonNull
-  <T> T get(@NonNull AggregateField aggregateField, @NonNull Class<T> valueType, @NonNull T defaultValue) {
-    T value = get(aggregateField, valueType);
-    return (value != null) ? value : defaultValue;
+    return valueType.cast(get(aggregateField));
   }
 
   @Nullable
@@ -194,18 +204,9 @@ class AggregateQuerySnapshot {
     return get(aggregateField, Date.class);
   }
 
-  @NonNull
-  Date getDate(@NonNull AggregateField aggregateField, @NonNull Date defaultValue) {
-    return get(aggregateField, Date.class, defaultValue);
-  }
-
   @Nullable
   Double getDouble(@NonNull AggregateField aggregateField) {
     return get(aggregateField, Double.class);
-  }
-
-  double getDouble(@NonNull AggregateField aggregateField, double defaultValue) {
-    return get(aggregateField, Double.class, defaultValue);
   }
 
   @Nullable
@@ -213,34 +214,14 @@ class AggregateQuerySnapshot {
     return get(aggregateField, Long.class);
   }
 
-  long getLong(@NonNull AggregateField aggregateField, long defaultValue) {
-    return get(aggregateField, Long.class, defaultValue);
-  }
-
   @Nullable
   String getString(@NonNull AggregateField aggregateField) {
     return get(aggregateField, String.class);
   }
 
-  @NonNull
-  String getString(@NonNull AggregateField aggregateField, String defaultValue) {
-    return get(aggregateField, String.class, defaultValue);
-  }
-
   @Nullable
   Timestamp getTimestamp(@NonNull AggregateField aggregateField) {
     return get(aggregateField, Timestamp.class);
-  }
-
-  @NonNull
-  Timestamp getTimestamp(@NonNull AggregateField aggregateField, Timestamp defaultValue) {
-    return get(aggregateField, Timestamp.class, defaultValue);
-  }
-
-  static final class UndefinedValue {
-  }
-
-  static final class OutOfRangeValue {
   }
 
   @Override
