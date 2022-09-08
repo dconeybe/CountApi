@@ -168,20 +168,6 @@ class AggregateQuerySnapshot {
     return get(AggregateField.count());
   }
 
-  boolean isUndefined(@NonNull AggregateField aggregateField) {
-    throw new RuntimeException("not implemented");
-  }
-
-  boolean isOutOfRange(@NonNull AggregateField aggregateField) {
-    throw new RuntimeException("not implemented");
-  }
-
-  @Nullable
-  Object get(@NonNull AggregateField aggregateField) {
-    // Return either the value, or UNDEFINED or OUT_OF_RANGE.
-    throw new RuntimeException("not implemented");
-  }
-
   // Special overload for "count" because it always evaluates to an integer, and is never undefined.
   long get(@NonNull AggregateField.CountAggregateField countAggregateField) {
     //noinspection ConstantConditions
@@ -194,14 +180,43 @@ class AggregateQuerySnapshot {
     return getDouble(sumAggregateField);
   }
 
+  boolean isUndefined(@NonNull AggregateField aggregateField) {
+    throw new RuntimeException("not implemented");
+  }
+
+  boolean isOutOfRange(@NonNull AggregateField aggregateField) {
+    throw new RuntimeException("not implemented");
+  }
+
+  @Nullable
+  Object get(@NonNull AggregateField aggregateField) {
+    return get(aggregateField, ServerTimestampBehavior.DEFAULT);
+  }
+
+  @Nullable
+  Object get(@NonNull AggregateField aggregateField, @NonNull ServerTimestampBehavior stb) {
+    // Return either the value, or UNDEFINED or OUT_OF_RANGE.
+    throw new RuntimeException("not implemented");
+  }
+
   @Nullable
   <T> T get(@NonNull AggregateField aggregateField, @NonNull Class<T> valueType) {
     return valueType.cast(get(aggregateField));
   }
 
   @Nullable
+  <T> T get(@NonNull AggregateField aggregateField, @NonNull Class<T> valueType, @NonNull ServerTimestampBehavior stb) {
+    return valueType.cast(get(aggregateField));
+  }
+
+  @Nullable
   Date getDate(@NonNull AggregateField aggregateField) {
-    return get(aggregateField, Date.class);
+    return getDate(aggregateField, ServerTimestampBehavior.DEFAULT);
+  }
+
+  @Nullable
+  Date getDate(@NonNull AggregateField aggregateField, @NonNull ServerTimestampBehavior stb) {
+    return get(aggregateField, Date.class, stb);
   }
 
   @Nullable
@@ -221,7 +236,12 @@ class AggregateQuerySnapshot {
 
   @Nullable
   Timestamp getTimestamp(@NonNull AggregateField aggregateField) {
-    return get(aggregateField, Timestamp.class);
+    return getTimestamp(aggregateField, ServerTimestampBehavior.DEFAULT);
+  }
+
+  @Nullable
+  Timestamp getTimestamp(@NonNull AggregateField aggregateField, @NonNull ServerTimestampBehavior stb) {
+    return get(aggregateField, Timestamp.class, stb);
   }
 
   @Override
