@@ -82,9 +82,9 @@ function aggregateFieldEqual(
 // The union of all `AggregateField` types that are returned from the factory
 // functions.
 type AggregateFieldType =
-  AggregateField<number> |
-  AggregateField<DocumentFieldValue | undefined> |
-  AggregateField<number | undefined>;
+  | ReturnType<typeof count>
+  | ReturnType<typeof min>
+  | ReturnType<typeof sum>;
 
 // A type whose values are all `AggregateField` objects.
 // This is used as an argument to the "getter" functions, and the snapshot will
