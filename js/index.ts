@@ -224,7 +224,7 @@ async function aggregateDemo(query: Query<unknown>) {
   });
   const num_people: number = snapshot.data().num_people;
   const min_age = snapshot.data().min_age ?? 0;
-  const total_salary: number = snapshot.data().money ?? 0;
+  const total_salary: number = snapshot.data().money;
   console.log(
     `Found ${num_people} people, ` +
     `the youngest being ${min_age} years old ` +
