@@ -89,7 +89,9 @@ type AggregateFieldType =
 // A type whose values are all `AggregateField` objects.
 // This is used as an argument to the "getter" functions, and the snapshot will
 // map the same names to the corresponding values.
-type AggregateSpec = { [field: string]: AggregateFieldType };
+interface AggregateSpec {
+  [field: string]: AggregateFieldType
+}
 
 // A type whose keys are taken from an `AggregateSpec` type, and whose values
 // are the result of the aggregation performed by the corresponding
