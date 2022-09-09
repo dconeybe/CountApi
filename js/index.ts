@@ -34,9 +34,6 @@ class FieldPath {
 
 class AggregateField<T> {
   type = "AggregateField";
-  // Will always be undefined; however, it is used in the fancy type mapping
-  // in AggregateSpecData (below). Is there a better way to do this?
-  _datum?: T = undefined;
 }
 
 // Creates and returns an aggregation that counts the documents in the result
@@ -97,8 +94,8 @@ interface AggregateSpec {
 // are the result of the aggregation performed by the corresponding
 // `AggregateField` from the input `AggregateSpec`.
 type AggregateSpecData<T extends AggregateSpec> = {
-  [Property in keyof T]-?: T[Property]["_datum"];
-};
+  [P in keyof T]: T[P] extends AggregateField<infer U> ? U : never
+}
 
 // The result of running an aggregate query.
 class AggregateQuerySnapshot<T extends AggregateSpec> {
