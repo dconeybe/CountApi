@@ -4,7 +4,6 @@ project(CountApi C)
 
 add_executable(
   CountApi
-  CountApi.h
   CountApi.m
 )
 
