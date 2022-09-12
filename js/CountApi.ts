@@ -200,7 +200,7 @@ export function getAggregateFromCache<T extends AggregateSpec>(
 // Compares two `AggregateQuerySnapshot` instances for equality.
 // Two `AggregateQuerySnapshot` instances are considered "equal" if they have
 // the same underlying query, the same metadata, and the same data.
-export function aggregateSnapshotEqual<T extends AggregateSpec>(
+export function aggregateQuerySnapshotEqual<T extends AggregateSpec>(
     left: AggregateQuerySnapshot<T>,
     right: AggregateQuerySnapshot<T>
 ): boolean {
