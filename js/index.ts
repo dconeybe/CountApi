@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+
 ////////////////////////////////////////////////////////////////////////////////
 // Types defined already in the Firestore SDK.
 // They are copied here so that the code that follows will compile.
@@ -11,6 +13,10 @@ interface DocumentData {
   [field: string]: DocumentFieldValue;
 }
 
+class Firestore {
+  type = "Firestore";
+}
+
 interface SnapshotOptions {
   readonly serverTimestamps?: 'estimate' | 'previous' | 'none';
 }
@@ -21,11 +27,47 @@ export class SnapshotMetadata {
 }
 
 class Query<T = DocumentData> {
-  type = "Query";
+  type: "Query" | "CollectionReference";
+
+  constructor(type: "Query" | "CollectionReference") {
+    this.type = type;
+  }
+}
+
+class CollectionReference<T> extends Query<T> {
+  constructor() {
+    super("CollectionReference");
+  }
 }
 
 class FieldPath {
   type = "FieldPath";
+}
+
+class QuerySnapshot {
+  type = "QuerySnapshot";
+  constructor(readonly size: number) {
+  }
+}
+
+class Filter {
+  type = "Filter";
+}
+
+function collection(db: Firestore, path: string): CollectionReference<DocumentData> {
+  throw new Error("not implemented");
+}
+
+function query<T>(coll: CollectionReference<T>, filter: Filter): Query<T> {
+  throw new Error("not implemented");
+}
+
+function getDocs(query: Query): Promise<QuerySnapshot> {
+  throw new Error("not implemented");
+}
+
+function where(field: string, op: "==", value: DocumentFieldValue): Filter {
+  throw new Error("not implemented");
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -212,23 +254,38 @@ export function aggregateSnapshotEqual<T extends AggregateSpec>(
 // Sample code
 ////////////////////////////////////////////////////////////////////////////////
 
-async function countDemo(query: Query<unknown>) {
-  const snapshot = await getCountFromServer(query);
-  console.log(`Found ${snapshot.data().count} documents`);
+async function Demo0_NormalQuery(db: Firestore) {
+  const query_ = collection(db, "games/halo/players");
+  const snapshot = await getDocs(query_);
+  expect(snapshot.size).to.equal(5000000);
 }
 
-async function aggregateDemo(query: Query<unknown>) {
-  const snapshot = await getAggregate(query, {
-    num_people: count(),
+async function Demo1_CountOfDocumentsInACollection(db: Firestore) {
+  const coll = collection(db, "games/halo/players");
+  const snapshot = await getCountFromServer(coll);
+  expect(snapshot.data().count).to.equal(5000000);
+}
+
+async function Demo2_CountOfDocumentsInACollectionWithFilter(db: Firestore) {
+  const coll = collection(db, "games/halo/players");
+  const query_ = query(coll, where("online", "==", true));
+  const snapshot = await getCountFromServer(query_);
+  expect(snapshot.data().count).to.equal(2000);
+}
+
+async function Demo2_MultipleAggregations(db: Firestore) {
+  const coll = collection(db, "games/halo/players");
+  const snapshot = await getAggregate(coll, {
+    num_players: count(),
     min_age: min("age"),
-    money: sum("salary")
+    score: sum("score")
   });
-  const num_people: number = snapshot.data().num_people;
+  const num_players: number = snapshot.data().num_players;
   const min_age = snapshot.data().min_age ?? 0;
-  const total_salary: number = snapshot.data().money ?? 0;
+  const total_points: number = snapshot.data().score ?? 0;
   console.log(
-    `Found ${num_people} people, ` +
+    `Found ${num_players} players, ` +
     `the youngest being ${min_age} years old ` +
-    `earning a total of ${total_salary} dollars.`
+    `with a total of ${total_points} points.`
   );
 }
