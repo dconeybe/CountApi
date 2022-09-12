@@ -83,6 +83,16 @@ abstract class AggregateField {
   }
 
   @NonNull
+  static MaxAggregateField max(String field) {
+    throw new RuntimeException("not implemented");
+  }
+
+  @NonNull
+  static MaxAggregateField max(FieldPath fieldPath) {
+    throw new RuntimeException("not implemented");
+  }
+
+  @NonNull
   static SumAggregateField sum(String field) {
     throw new RuntimeException("not implemented");
   }
@@ -92,13 +102,29 @@ abstract class AggregateField {
     throw new RuntimeException("not implemented");
   }
 
+  @NonNull
+  static AverageAggregateField average(String field) {
+    throw new RuntimeException("not implemented");
+  }
+
+  @NonNull
+  static AverageAggregateField average(FieldPath fieldPath) {
+    throw new RuntimeException("not implemented");
+  }
+
   static class CountAggregateField extends AggregateField {
   }
 
   static class MinAggregateField extends AggregateField {
   }
 
+  static class MaxAggregateField extends AggregateField {
+  }
+
   static class SumAggregateField extends AggregateField {
+  }
+
+  static class AverageAggregateField extends AggregateField {
   }
 
 }
@@ -178,6 +204,12 @@ class AggregateQuerySnapshot {
   @Nullable
   Double get(@NonNull AggregateField.SumAggregateField sumAggregateField) {
     return getDouble(sumAggregateField);
+  }
+
+  // Special overload for "average" because it always evaluates to a double.
+  @Nullable
+  Double get(@NonNull AggregateField.AverageAggregateField averageAggregateField) {
+    return getDouble(averageAggregateField);
   }
 
   boolean isUndefined(@NonNull AggregateField aggregateField) {
