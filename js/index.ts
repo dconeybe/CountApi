@@ -294,7 +294,7 @@ async function Demo2_CountOfDocumentsInACollectionWithFilter(db: Firestore) {
   expect(snapshot.data().count).to.equal(2000);
 }
 
-async function Demo2_MultipleAggregations(db: Firestore) {
+async function Demo3_MultipleAggregations(db: Firestore) {
   const coll = collection(db, "games/halo/players");
   const snapshot = await getAggregate(coll, {
     num_players: count(),
