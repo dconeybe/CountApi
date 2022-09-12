@@ -94,11 +94,30 @@ function min(field: string | FieldPath):
   throw new Error("not implemented");
 }
 
+// Creates and returns an aggregation that finds the maximum value of a given
+// field in the result set. If no documents in the result define the given
+// field, then the result will be `undefined`. The "maximum" will be calculated
+// as if the query results were ordered by the specified field and choosing the
+// value from the last document in the result set.
+function max(field: string | FieldPath):
+    AggregateField<DocumentFieldValue | undefined> {
+  throw new Error("not implemented");
+}
+
 // Creates and returns an aggregation that finds the sum of the numeric values
 // of a given field in the result set. If no documents in the result set define
 // the given field, or none of the field values are numeric, then the result
 // will be `undefined`.
 function sum(field: string | FieldPath):
+    AggregateField<number | undefined> {
+  throw new Error("not implemented");
+}
+
+// Creates and returns an aggregation that finds the average of the numeric
+// values of a given field in the result set. If no documents in the result set
+// define the given field, or none of the field values are numeric, then the
+// result will be `undefined`.
+function average(field: string | FieldPath):
     AggregateField<number | undefined> {
   throw new Error("not implemented");
 }
@@ -123,7 +142,9 @@ function aggregateFieldEqual(
 type AggregateFieldType =
   | ReturnType<typeof count>
   | ReturnType<typeof min>
-  | ReturnType<typeof sum>;
+  | ReturnType<typeof max>
+  | ReturnType<typeof sum>
+  | ReturnType<typeof average>;
 
 // A type whose values are all `AggregateField` objects.
 // This is used as an argument to the "getter" functions, and the snapshot will
