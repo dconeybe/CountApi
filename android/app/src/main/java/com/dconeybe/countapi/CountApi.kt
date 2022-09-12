@@ -1,12 +1,14 @@
 package com.dconeybe.countapi
 
-internal inline fun <reified T>
+import com.dconeybe.countapi.firestore.ServerTimestampBehavior
+
+inline fun <reified T>
     AggregateQuerySnapshot.getField(
       field: AggregateField
     ): T? =
       get(field, T::class.java)
 
-internal inline fun <reified T>
+inline fun <reified T>
     AggregateQuerySnapshot.getField(
       field: AggregateField,
       serverTimestampBehavior: ServerTimestampBehavior

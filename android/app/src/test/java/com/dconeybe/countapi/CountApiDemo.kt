@@ -1,29 +1,32 @@
 package com.dconeybe.countapi
 
-import com.dconeybe.countapi.AggregateField.*
+import com.dconeybe.countapi.AggregateField.count
+import com.dconeybe.countapi.AggregateField.min
+import com.dconeybe.countapi.AggregateField.sum
+import com.dconeybe.countapi.firestore.FirebaseFirestore
 
 import com.google.common.truth.Truth.assertThat
 
-internal fun Demo0_NormalQuery(db: FirebaseFirestore) {
+fun Demo0_NormalQuery(db: FirebaseFirestore) {
   val query = db.collection("games/halo/players")
   val snapshot = query.get().result
   assertThat(snapshot.size()).isEqualTo(5_000_000)
 }
 
-internal fun Demo1_CountOfDocumentsInACollection(db: FirebaseFirestore) {
+fun Demo1_CountOfDocumentsInACollection(db: FirebaseFirestore) {
   val countQuery = db.collection("games/halo/players").count()
   val snapshot = countQuery.get(AggregateSource.SERVER).result
   assertThat(snapshot.count).isEqualTo(5_000_000)
 }
 
-internal fun Demo2_CountOfDocumentsInACollectionWithFilter(db: FirebaseFirestore) {
+fun Demo2_CountOfDocumentsInACollectionWithFilter(db: FirebaseFirestore) {
   val query = db.collection("games/halo/players").whereEqualTo("online", true)
   val countQuery = query.count()
   val snapshot = countQuery.get(AggregateSource.SERVER).result
   assertThat(snapshot.count).isEqualTo(2000)
 }
 
-internal fun Demo3_MultipleAggregations(db: FirebaseFirestore) {
+fun Demo3_MultipleAggregations(db: FirebaseFirestore) {
   val query = db.collection("games/halo/players")
   val aggregateQuery = query.aggregate(count(), min("age"), sum("score"))
   val snapshot = aggregateQuery.get().result

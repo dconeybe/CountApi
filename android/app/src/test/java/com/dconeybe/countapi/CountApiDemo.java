@@ -5,6 +5,10 @@ import static com.dconeybe.countapi.AggregateField.min;
 import static com.dconeybe.countapi.AggregateField.sum;
 import static com.google.common.truth.Truth.assertThat;
 
+import com.dconeybe.countapi.firestore.CollectionReference;
+import com.dconeybe.countapi.firestore.FirebaseFirestore;
+import com.dconeybe.countapi.firestore.QuerySnapshot;
+
 public final class CountApiDemo {
 
   public void Demo0_NormalQuery(FirebaseFirestore db) {
