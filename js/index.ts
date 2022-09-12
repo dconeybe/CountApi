@@ -16,16 +16,16 @@ interface SnapshotOptions {
 }
 
 export class SnapshotMetadata {
-  readonly hasPendingWrites: boolean;
-  readonly fromCache: boolean;
+  constructor(readonly hasPendingWrites: boolean, readonly fromCache: boolean) {
+  }
 }
 
 class Query<T = DocumentData> {
-  type: "Query";
+  type = "Query";
 }
 
 class FieldPath {
-  type: "FieldPath";
+  type = "FieldPath";
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +99,7 @@ type AggregateSpecData<T extends AggregateSpec> = {
 
 // The result of running an aggregate query.
 class AggregateQuerySnapshot<T extends AggregateSpec> {
-  type: "AggregateQuerySnapshot";
+  type = "AggregateQuerySnapshot";
 
   // The result's metadata (i.e. fromCache and/or hasPendingWrites).
   readonly metadata: SnapshotMetadata;
@@ -109,7 +109,11 @@ class AggregateQuerySnapshot<T extends AggregateSpec> {
 
   // ignore this for API design purposes; it's here only to facilitate the
   // return type of data().
-  private constructor(private readonly _data: AggregateSpecData<T>) {
+  private constructor(private readonly _data: AggregateSpecData<T>,
+                      metadata: SnapshotMetadata,
+                      query: Query<unknown>) {
+    this.metadata = metadata;
+    this.query = query;
   }
 
   // The results of the requested aggregations. The keys of the returned object
@@ -221,7 +225,7 @@ async function aggregateDemo(query: Query<unknown>) {
   });
   const num_people: number = snapshot.data().num_people;
   const min_age = snapshot.data().min_age ?? 0;
-  const total_salary: number = snapshot.data().money;
+  const total_salary: number = snapshot.data().money ?? 0;
   console.log(
     `Found ${num_people} people, ` +
     `the youngest being ${min_age} years old ` +
