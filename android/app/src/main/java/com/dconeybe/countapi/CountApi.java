@@ -11,6 +11,16 @@ import java.util.Map;
 // They are copied here so that the code that follows will compile.
 ////////////////////////////////////////////////////////////////////////////////
 
+class FirebaseFirestore {
+  CollectionReference collection(String path) {
+    throw new RuntimeException("not implemented");
+  }
+}
+
+class CollectionReference extends Query {
+
+}
+
 abstract class Task<TResult> {
 
   public abstract TResult getResult();
@@ -43,11 +53,25 @@ class GeoPoint {
 class DocumentReference {
 }
 
+class QuerySnapshot {
+  int size() {
+    throw new RuntimeException("not implemented");
+  }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // The methods added to the existing Query class.
 ////////////////////////////////////////////////////////////////////////////////
 
 class Query {
+
+  Task<QuerySnapshot> get() {
+    throw new RuntimeException("not implemented");
+  }
+
+  Query whereEqualTo(String field, boolean value) {
+    throw new RuntimeException("not implemented");
+  }
 
   @NonNull
   AggregateQuery count() {
