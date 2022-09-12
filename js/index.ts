@@ -1,4 +1,4 @@
-import { Firestore } from "./CountApi";
+import { Firestore } from "./FirestoreTypes";
 import {
   Demo0_NormalQuery,
   Demo1_CountOfDocumentsInACollection,

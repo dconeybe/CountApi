@@ -3,14 +3,17 @@ import { expect } from 'chai';
 import {
   Firestore,
   collection,
+  getDocs,
+  query,
+  where
+} from "./FirestoreTypes"
+
+import {
   count,
   getAggregate,
   getCountFromServer,
-  getDocs,
   min,
-  query,
-  sum,
-  where
+  sum
 } from "./CountApi"
 
 export async function Demo0_NormalQuery(db: Firestore) {
