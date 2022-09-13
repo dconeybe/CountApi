@@ -14,8 +14,8 @@
 		ED86E0B528CFCBC400B9A2D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED86E0B428CFCBC400B9A2D9 /* Assets.xcassets */; };
 		ED86E0B828CFCBC400B9A2D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED86E0B628CFCBC400B9A2D9 /* LaunchScreen.storyboard */; };
 		ED86E0E128CFCD6000B9A2D9 /* CountApi.m in Sources */ = {isa = PBXBuildFile; fileRef = ED86E0E028CFCD5F00B9A2D9 /* CountApi.m */; };
-		EDD0851D28CFF5230073A35C /* countapiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD0851C28CFF5230073A35C /* countapiTests.swift */; };
 		EDD0852528CFF56D0073A35C /* CountApiDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = EDD0852428CFF56D0073A35C /* CountApiDemo.m */; };
+		EDD0852828D0BA300073A35C /* CountApiDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD0852728D0BA300073A35C /* CountApiDemo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,10 +41,10 @@
 		ED86E0E028CFCD5F00B9A2D9 /* CountApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CountApi.m; sourceTree = "<group>"; };
 		ED86E0E228CFCDBC00B9A2D9 /* CountApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CountApi.h; sourceTree = "<group>"; };
 		EDD0851A28CFF5230073A35C /* countapiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = countapiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EDD0851C28CFF5230073A35C /* countapiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = countapiTests.swift; sourceTree = "<group>"; };
 		EDD0852328CFF56C0073A35C /* countapiTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "countapiTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		EDD0852428CFF56D0073A35C /* CountApiDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CountApiDemo.m; sourceTree = "<group>"; };
 		EDD0852628D00C300073A35C /* FirestoreTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirestoreTypes.h; sourceTree = "<group>"; };
+		EDD0852728D0BA300073A35C /* CountApiDemo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountApiDemo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,8 +104,8 @@
 		EDD0851B28CFF5230073A35C /* countapiTests */ = {
 			isa = PBXGroup;
 			children = (
+				EDD0852728D0BA300073A35C /* CountApiDemo.swift */,
 				EDD0852428CFF56D0073A35C /* CountApiDemo.m */,
-				EDD0851C28CFF5230073A35C /* countapiTests.swift */,
 				EDD0852328CFF56C0073A35C /* countapiTests-Bridging-Header.h */,
 			);
 			path = countapiTests;
@@ -225,8 +225,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EDD0851D28CFF5230073A35C /* countapiTests.swift in Sources */,
 				EDD0852528CFF56D0073A35C /* CountApiDemo.m in Sources */,
+				EDD0852828D0BA300073A35C /* CountApiDemo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

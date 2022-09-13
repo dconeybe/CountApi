@@ -46,8 +46,11 @@ void Demo3_MultipleAggregations(FIRFirestore* db) {
           minAge = 0;
         }
         NSNumber* totalPoints = [snapshot valueForSumAggregateField:[FIRAggregateField aggregateFieldForSumOfField:@"score"]];
+        if (totalPoints == nil) {
+          totalPoints = @(0);
+        }
         NSLog(@"Found %@ players, the youngest being %@ years old with a total of %@ points.",
-          snapshot.count, @(456), @(789));
+          snapshot.count, minAge, totalPoints);
       }
   ];
 }

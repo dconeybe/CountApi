@@ -1,3 +1,6 @@
+#ifndef FIRESTORE_FIRESTORETYPES_H_
+#define FIRESTORE_FIRESTORETYPES_H_
+
 #import <Foundation/Foundation.h>
 
 @class FIRCollectionReference;
@@ -13,6 +16,7 @@ typedef NS_ENUM(NSInteger, FIRServerTimestampBehavior) {
   FIRServerTimestampBehaviorPrevious
 } NS_SWIFT_NAME(ServerTimestampBehavior);
 
+NS_SWIFT_NAME(Firestore)
 @interface FIRFirestore : NSObject
 - (FIRCollectionReference *)collectionWithPath:(NSString *)collectionPath
     NS_SWIFT_NAME(collection(_:));
@@ -31,4 +35,7 @@ NS_SWIFT_NAME(DocumentSnapshot)
 
 NS_SWIFT_NAME(QueryDocumentSnapshot)
 @interface FIRQueryDocumentSnapshot : FIRDocumentSnapshot
+- (NSDictionary<NSString *, id> *)data;
 @end
+
+#endif  // FIRESTORE_FIRESTORETYPES_H_
