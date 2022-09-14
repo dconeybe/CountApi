@@ -5,6 +5,8 @@
 
 #import "FirestoreTypes.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 ////////////////////////////////////////////////////////////////////////////////
 // Forward declarations to make the compiler happy.
 ////////////////////////////////////////////////////////////////////////////////
@@ -19,9 +21,9 @@
 
 @interface FIRQuery : NSObject
 
-@property(nonatomic, readonly) FIRAggregateQuery* _Nonnull count;
+@property(nonatomic, readonly) FIRAggregateQuery* count;
 
--(FIRAggregateQuery * _Nonnull)aggregate:(NSArray<FIRAggregateField *> * _Nonnull)aggregations;
+-(FIRAggregateQuery *)aggregate:(NSArray<FIRAggregateField *> *)aggregations;
 
 @end
 
@@ -55,35 +57,35 @@ NS_SWIFT_NAME(AggregateField)
 @interface FIRAggregateField : NSObject
 
 /** :nodoc: */
-- (instancetype _Nonnull)init NS_UNAVAILABLE;
-+ (instancetype _Nonnull)aggregateFieldForCount NS_SWIFT_NAME(count());
-+ (instancetype _Nonnull)aggregateFieldForMinOfField:(NSString * _Nonnull)field NS_SWIFT_NAME(min(_:));
-+ (instancetype _Nonnull)aggregateFieldForMinOfFieldPath:(FIRFieldPath * _Nonnull)fieldPath NS_SWIFT_NAME(min(_:));
-+ (instancetype _Nonnull)aggregateFieldForMaxOfField:(NSString * _Nonnull)field NS_SWIFT_NAME(max(_:));
-+ (instancetype _Nonnull)aggregateFieldForMaxOfFieldPath:(FIRFieldPath * _Nonnull)fieldPath NS_SWIFT_NAME(max(_:));
-+ (instancetype _Nonnull)aggregateFieldForSumOfField:(NSString * _Nonnull)field NS_SWIFT_NAME(sum(_:));
-+ (instancetype _Nonnull)aggregateFieldForSumOfFieldPath:(FIRFieldPath * _Nonnull)fieldPath NS_SWIFT_NAME(sum(_:));
-+ (instancetype _Nonnull)aggregateFieldForAverageOfField:(NSString * _Nonnull)field NS_SWIFT_NAME(average(_:));
-+ (instancetype _Nonnull)aggregateFieldForAverageOfFieldPath:(FIRFieldPath * _Nonnull)fieldPath NS_SWIFT_NAME(average(_:));
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)aggregateFieldForCount NS_SWIFT_NAME(count());
++ (instancetype)aggregateFieldForMinOfField:(NSString *)field NS_SWIFT_NAME(min(_:));
++ (instancetype)aggregateFieldForMinOfFieldPath:(FIRFieldPath *)fieldPath NS_SWIFT_NAME(min(_:));
++ (instancetype)aggregateFieldForMaxOfField:(NSString *)field NS_SWIFT_NAME(max(_:));
++ (instancetype)aggregateFieldForMaxOfFieldPath:(FIRFieldPath *)fieldPath NS_SWIFT_NAME(max(_:));
++ (instancetype)aggregateFieldForSumOfField:(NSString *)field NS_SWIFT_NAME(sum(_:));
++ (instancetype)aggregateFieldForSumOfFieldPath:(FIRFieldPath *)fieldPath NS_SWIFT_NAME(sum(_:));
++ (instancetype)aggregateFieldForAverageOfField:(NSString *)field NS_SWIFT_NAME(average(_:));
++ (instancetype)aggregateFieldForAverageOfFieldPath:(FIRFieldPath *)fieldPath NS_SWIFT_NAME(average(_:));
 
 @end
 
 ////////////////////////////////////////////////////////////////////////////////
 
-NS_SWIFT_NAME(A_NonnullggregateQuery)
+NS_SWIFT_NAME(AggregateQuery)
 @interface FIRAggregateQuery : NSObject
 
-@property(nonatomic, readonly) FIRQuery * _Nonnull query;
+@property(nonatomic, readonly) FIRQuery * query;
 
 -(void)getAggregationWithCompletion:
-  (void (^  _Nonnull)(
+  (void (^ )(
     FIRAggregateQuerySnapshot *_Nullable snapshot,
     NSError *_Nullable error
   ))completion
   NS_SWIFT_NAME(getAggregation(source:));
 
 -(void)getAggregationWithSource:(FIRAggregateSource)source
-  completion:(void (^ _Nonnull)(
+  completion:(void (^)(
     FIRAggregateQuerySnapshot *_Nullable snapshot,
     NSError *_Nullable error
   ))completion
@@ -96,27 +98,29 @@ NS_SWIFT_NAME(A_NonnullggregateQuery)
 NS_SWIFT_NAME(AggregateQuerySnapshot)
 @interface FIRAggregateQuerySnapshot : NSObject
 
-@property(nonatomic, readonly) FIRAggregateQuery * _Nonnull query;
-@property(nonatomic, readonly) FIRSnapshotMetadata * _Nonnull metadata;
-@property(nonatomic, readonly) NSNumber * _Nonnull count;
+@property(nonatomic, readonly) FIRAggregateQuery * query;
+@property(nonatomic, readonly) FIRSnapshotMetadata * metadata;
+@property(nonatomic, readonly) NSNumber * count;
 
-- (NSDictionary<id, id> * _Nonnull)aggregations;
+- (NSDictionary<id, id> *)aggregations;
 
 // Based on NSUserDefaults
-- (NSDictionary<id, id> * _Nonnull)aggregationsWithServerTimestampBehavior:
+- (NSDictionary<id, id> *)aggregationsWithServerTimestampBehavior:
     (FIRServerTimestampBehavior)serverTimestampBehavior;
 
-- (nullable NSNumber *)valueForSumAggregateField:(FIRAggregateField * _Nonnull)aggregateField NS_SWIFT_NAME(getSum(_:));
-- (nullable NSNumber *)valueForAverageAggregateField:(FIRAggregateField * _Nonnull)aggregateField NS_SWIFT_NAME(getAverage(_:));
+- (nullable NSNumber *)valueForSumAggregateField:(FIRAggregateField *)aggregateField NS_SWIFT_NAME(getSum(_:));
+- (nullable NSNumber *)valueForAverageAggregateField:(FIRAggregateField *)aggregateField NS_SWIFT_NAME(getAverage(_:));
 
-- (nullable id)valueForField:(id _Nonnull)field NS_SWIFT_NAME(get(_:));
+- (nullable id)valueForField:(id)field NS_SWIFT_NAME(get(_:));
 
-- (nullable id)valueForField:(id _Nonnull)field
+- (nullable id)valueForField:(id)field
      serverTimestampBehavior:(FIRServerTimestampBehavior)serverTimestampBehavior
     NS_SWIFT_NAME(get(_:serverTimestampBehavior:));
 
-- (nullable id)objectForKeyedSubscript:(id _Nonnull)field;
+- (nullable id)objectForKeyedSubscript:(id)field;
 
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif  // FIRESTORE_COUNTAPI_H_

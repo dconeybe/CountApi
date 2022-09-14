@@ -10,6 +10,8 @@
 @class FIRSnapshotMetadata;
 @class FIRTimestamp;
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSInteger, FIRServerTimestampBehavior) {
   FIRServerTimestampBehaviorNone,
   FIRServerTimestampBehaviorEstimate,
@@ -37,5 +39,7 @@ NS_SWIFT_NAME(QueryDocumentSnapshot)
 @interface FIRQueryDocumentSnapshot : FIRDocumentSnapshot
 - (NSDictionary<NSString *, id> *)data;
 @end
+
+NS_ASSUME_NONNULL_END
 
 #endif  // FIRESTORE_FIRESTORETYPES_H_
